@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HelloController {
@@ -19,4 +20,30 @@ public class HelloController {
         model.addAttribute("name", name); //Model객체를 이용해 name이라는 이름으로 name변수값을 view로 전달한다.
         return "hello-template";
     } // 작동하는 원리 파라미터가 필요하므로 링크를 입력한다음 ?name="원하는 이름" 으로 파라미터를 주면된다.
+
+    @GetMapping("hello-string")
+    @ResponseBody// http body 부분에 데이터를 직접 전달
+    public String helloString(@RequestParam("name") String name) {
+        return "hello " + name; //그대로 데이터를 내려준다
+    }
+
+    @GetMapping("hello-api")
+    @ResponseBody
+    public Hello helloApi(@RequestParam("name") String name) { //name에서 파라미터를 추출
+        Hello hello = new Hello(); //hello라는 객체를 생성
+        hello.SetName(name);
+        return hello; // 값을 객체로 넘긴다
+    }
+    static class Hello {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void SetName(String name) {
+            this.name = name;
+        }
+
+    }
 }
